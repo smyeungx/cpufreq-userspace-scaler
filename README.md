@@ -17,7 +17,7 @@ DSM Complaining
 
 Finally reach 100C and Auto Shutdown
 
-## Note: Synology DS1223xs+ is an excellent NAS, with best-in-class price point & build quality.  Just this simple fault make it totally unusable in production environment.   Consider it has everything you didn't expected like 2 NVME Cache Slot, 10G NIC, 8-bays, and a PCI-e slot too.  I have 2 x 2TB Samsung NVME 980Pro, added 40G Mellanox, 8 x 20TB HGST.  I cannot find other solution as affordable as this.  Only thing missing is a network mount...
+## Note: Synology DS1223xs+ is an excellent NAS, with best-in-class price point & build quality.  Just this simple fault make it totally unusable in production environment.   Consider it has everything you didn't expected like 2 NVME Cache Slot, 10G NIC, 8-bays, and a PCI-e slot too.  I have 2 x 2TB Samsung NVME 980Pro, added 40G Mellanox, 8 x 20TB HGST.  I cannot find other solution as friendly as this.  Only thing missing is a network mount...
 
 This script is scaling cpu frequency according to current average load.
 You can set 2 frequency steps : low, mid. This 2 thresholds will automatically set cpu frequency accordingly :
