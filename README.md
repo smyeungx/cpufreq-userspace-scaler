@@ -3,7 +3,7 @@
 
 ## If you're missing ondemand or conservative governors, this script is for you.
 
-## If you encounter Synology DS1823xs+ overheating and auto shutdown during a low to medium load condition, this script is for you.  Synology DS1823xs+ cpu throttling is faulty, it doesn't care about the CPU frequency vs temperature (cat /sys/class/hwmon/hwmon0/device/hwmon/hwmon0/temp1_input) and max temperature (cat /sys/class/hwmon/hwmon0/device/hwmon/hwmon0/temp1_max).  There will be a condition that CPU temperature can reach over the impossible 100C and auto shutdown will be executed (even when all CPU load is just 50% in total, and it make no sense that the AMD Ryzen V1780B CPU will set the frequency at 3.35GHz).  The Control Panel -> Info Center -> Thermal Status will display over 100C as well.  This script basically throttle and switch the CPU frequency between 1.6GHz to 2.3GHz  (cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies).  My Syno is very happy now working at around 52C.  It wasn't slow at all even the CPU freq is capped at 2.3GHz (better than RS1221rp+)
+#### If you encounter Synology DS1823xs+ overheating and auto shutdown during a low to medium load condition, this script is for you.  Synology DS1823xs+ cpu throttling is faulty, it doesn't care about the CPU frequency vs temperature (cat /sys/class/hwmon/hwmon0/device/hwmon/hwmon0/temp1_input) and max temperature (cat /sys/class/hwmon/hwmon0/device/hwmon/hwmon0/temp1_max).  There will be a condition that CPU temperature can reach over the impossible 100C and auto shutdown will be executed (even when all CPU load is just 50% in total, and it make no sense that the AMD Ryzen V1780B CPU will set the frequency at 3.35GHz).  The Control Panel -> Info Center -> Thermal Status will display over 100C as well.  This script basically throttle and switch the CPU frequency between 1.6GHz to 2.3GHz  (cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies).  My Syno is very happy now working at around 52C.  It wasn't slow at all even the CPU freq is capped at 2.3GHz (better than RS1221rp+)
 
 ![image](https://github.com/smyeungx/cpufreq-userspace-scaler/assets/42128034/bd00f43b-09e3-4f11-a965-613420682d20)
 
@@ -21,7 +21,7 @@ Finally reach 100C and Auto Shutdown
 
 Happy Remote Site DS1823xs+
 
-## Note: Synology DS1823xs+ is an excellent NAS, with best-in-class price point & build quality.  Just this simple fault make it totally unusable in production environment.   Consider it has everything you didn't expected like 2 NVME Cache Slot, 10G NIC, 8-bays, and a PCI-e slot too.  I have 2 x 2TB Samsung NVME 980Pro, added 40G Mellanox, 8 x 20TB HGST.  I cannot find other solution as friendly as this.  Only thing missing is a network mount...
+#### Note: Synology DS1823xs+ is an excellent NAS, with best-in-class price point & build quality.  Just this simple fault make it totally unusable in production environment.   Consider it has everything you didn't expected like 2 NVME Cache Slot, 10G NIC, 8-bays, and a PCI-e slot too.  I have 2 x 2TB Samsung NVME 980Pro, added 40G Mellanox, 8 x 20TB HGST.  I cannot find other solution as friendly as this.  Only thing missing is a network mount...
 
 This script is scaling cpu frequency according to current average load.
 You can set 2 frequency steps : low, mid. This 2 thresholds will automatically set cpu frequency accordingly :
