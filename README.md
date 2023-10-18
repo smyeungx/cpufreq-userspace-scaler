@@ -1,4 +1,4 @@
-![image](https://github.com/smyeungx/cpufreq-userspace-scaler/assets/42128034/adfcdb26-0015-4510-9919-9595bd31bc36)# cpufreq-userspace-scaler
+# cpufreq-userspace-scaler
 ##### Cpu frequency scaling script for cpufreq userspace governor
 
 ## If you're missing ondemand or conservative governors, this script is for you.
