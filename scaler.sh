@@ -43,20 +43,29 @@ if [ "$governor" = "userspace" ]; then
   done
 fi
 
+# List all CPUs speed
+function cpu_speed {
+  echo Thermal status cpu temp "$(cat /sys/class/hwmon/hwmon0/device/hwmon/hwmon0/temp1_input)"
+  for i in $(seq 0 "${cpucorecount}"); do
+    #cpu_freq = $(cat /sys/devices/system/cpu/cpu"${i}"/cpufreq/scaling_cur_freq)
+    echo cpu"${i}" "$(cat /sys/devices/system/cpu/cpu"${i}"/cpufreq/scaling_cur_freq)"
+  done
+}
+
 # Frequency scaling function
 function main {
   # Get current and max cpu temps
-  currtemp=$(cat /sys/bus/platform/devices/coretemp.0/hwmon/hwmon0/temp1_input)
-  maxtemp=$(cat /sys/bus/platform/devices/coretemp.0/hwmon/hwmon0/temp1_max)
+  currtemp=$(cat /sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon0/temp1_input)
+  maxtemp=$(cat /sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon0/temp1_max)
 
   # Get average load over 5m in base10 integer format
   loadavg=$(awk -F . '{print $1 substr($2,1,2)}' </proc/loadavg)
 
   # Frequencies steps definitions
   minfreq=${freqlist[-1]}
-  midfreq=${freqlist[$((${#freqlist[*]} / 2))]}
+  midfreq=${freqlist[1]}
   maxfreq=${freqlist[0]}
-  coolfreq=${freqlist[3]}
+  coolfreq=${freqlist[-1]}
 
   # Set load steps to trigger frequencies scaling, this user overidable
   lowload=$(grep -c processor /proc/cpuinfo | awk '{ print $1 * 0.3 * 100 }')
@@ -65,23 +74,32 @@ function main {
   if [ "$currtemp" -lt "$maxtemp" ]; then
     for i in $(seq 0 "${cpucorecount}"); do
       if [ "$loadavg" -le $((10#$lowload)) ]; then
+        echo "Setting minfreq ${minfreq}"
         echo "$minfreq" >/sys/devices/system/cpu/cpu"${i}"/cpufreq/scaling_setspeed
-      elif [ "$loadavg" -ge $((10#$lowload)) ] && [ "$loadavg" -le $((10#$midload)) ]; then
+        echo "$minfreq" >/sys/devices/system/cpu/cpu"${i}"/cpufreq/scaling_max_freq
+        echo "$minfreq" >/sys/devices/system/cpu/cpufreq/policy"${i}"/scaling_max_freq
+      #elif [ "$loadavg" -ge $((10#$lowload)) ] && [ "$loadavg" -le $((10#$midload)) ]; then
+      else
+        echo "Setting midfreq ${midfreq}"
         echo "$midfreq" >/sys/devices/system/cpu/cpu"${i}"/cpufreq/scaling_setspeed
-      elif [ "$loadavg" -ge $((10#$midload)) ]; then
-        echo "$maxfreq" >/sys/devices/system/cpu/cpu"${i}"/cpufreq/scaling_setspeed
+        echo "$midfreq" >/sys/devices/system/cpu/cpu"${i}"/cpufreq/scaling_max_freq
+        echo "$midfreq" >/sys/devices/system/cpu/cpufreq/policy"${i}"/scaling_max_freq
+      #elif [ "$loadavg" -ge $((10#$midload)) ]; then
+      #  echo "$maxfreq" >/sys/devices/system/cpu/cpu"${i}"/cpufreq/scaling_setspeed
       fi
     done
   else
     for i in $(seq 0 "${cpucorecount}"); do
       echo "$coolfreq" >/sys/devices/system/cpu/cpu"${i}"/cpufreq/scaling_setspeed
+      echo "$coolfreq" >/sys/devices/system/cpu/cpu"${i}"/cpufreq/scaling_max_freq
+      echo "$coolfreq" >/sys/devices/system/cpu/cpufreq/policy"${i}"/scaling_max_freq
     done
-    sleep 30
   fi
+  cpu_speed
 }
 
 # Deamonize the main function...
 while true; do
   main
-  sleep 0.5
+  sleep 0.2
 done
